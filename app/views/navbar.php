@@ -1,8 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <?php 
 	  $perfil= $this->session->userdata('id_perfil'); 
-
-
 ?>	
 
 <div class="row-fluid">

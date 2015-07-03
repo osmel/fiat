@@ -103,6 +103,39 @@ jQuery(document).ready(function($) {
 	});	
 
 
+
+
+//gestion de usuarios (crear, editar y eliminar )
+	jQuery("#form_formulario").submit(function(e){
+		jQuery('#foo').css('display','block');
+		var spinner = new Spinner(opts).spin(target);
+		jQuery(this).ajaxSubmit({
+			success: function(data){
+				if(data != true){
+					
+					spinner.stop();
+					jQuery('#foo').css('display','none');
+					jQuery('#messages').css('display','block');
+					jQuery('#messages').addClass('alert-danger');
+					jQuery('#messages').html(data);
+					jQuery('html,body').animate({
+						'scrollTop': jQuery('#messages').offset().top
+					}, 1000);
+				
+
+				}else{
+
+						spinner.stop();
+						jQuery('#foo').css('display','none');
+						window.location.href = '';						
+				}
+			} 
+		});
+		return false;
+	});
+
+
+
 	//gestion de usuarios (crear, editar y eliminar )
 	jQuery("#form_respaldo").submit(function(e){
 		jQuery('#foo').css('display','block');

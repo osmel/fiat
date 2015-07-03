@@ -68,8 +68,6 @@ $route['procesando_inicio']    		= 'main/procesando_inicio';
 $route['inscripcion']    		= 'inscripciones/index';
 
 
-$route['nuevo']    		= 'inscripciones/nuevo';
-
 
 
 
