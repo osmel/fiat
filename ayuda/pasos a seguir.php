@@ -342,6 +342,10 @@ https://osmel_calderon@yahoo.com.ar:estrategasdigitales/Chansey.git
 https://osmel@github.com:estrategasdigitales/Chansey.git
 *******************************************************************************
 
+sudo npm install forever -g
+sudo npm install forever-monitor
+sudo forever start -l forever.log -o out.log -e err.log cisockServer.js
+*******************************************************************************
 
 npm install socket.io
 npm install redis
