@@ -288,6 +288,15 @@ grunt
 gulp
 
 ************************smart-git*******************************************************
+
+https://github.com/GeoRemindMe/GeoRemindMe_Web/wiki/How-to-set-up-your-repository
+https://help.github.com/articles/generating-ssh-keys/
+
+cd ~/.ssh
+ssh-keygen -t rsa -C "osmel_calderon@yahoo.com.ar"
+
+
+
 http://rooteando.com/git-smartgit-repositorios-remotos/
 http://www.syntevo.com/smartgit/download?file=smartgit/smartgit-6_5_9.deb
 
