@@ -14,7 +14,7 @@
 | path to your installation.
   Colocamos la url o dominio
 */
-$config['base_url']	= 'http://autos.dev.com';
+$config['base_url']	= 'http://autos.dev.com'; 
 
 /*
 |--------------------------------------------------------------------------
