@@ -73,6 +73,12 @@ jQuery(document).ready(function($) {
 
 
 
+jQuery('body').on('click','#otroacomp', function (e) {
+  jQuery( "#cont_tab" ).animate({height: 'toggle'});
+});
+
+
+
 //gestion de usuarios (crear, editar y eliminar )
 	jQuery("#form_usuarios").submit(function(e){
 		jQuery('#foo').css('display','block');

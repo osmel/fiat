@@ -68,24 +68,61 @@ class Inscripciones extends CI_Controller {
 
 	public function nuevo() {
 		
+		//DATOS PERSONALES DEL REGISTRADO.
+		$this->form_validation->set_rules('nombre','nombre','trim|strip_tags|required|min_length[5]|max_lenght[25]|callback_nombre_valido|xss_clean');
+		$this->form_validation->set_rules('apellidop','Apell. Paterno','trim|strip_tags|required|min_length[5]|max_lenght[25]|callback_nombre_valido|xss_clean');
+		$this->form_validation->set_rules('apellidom','Apell. Materno','trim|strip_tags|min_length[5]|max_lenght[25]|callback_nombre_valido_opcional|xss_clean');
 		$this->form_validation->set_rules('dia','Fecha Nacimiento','callback_fecha_valida['.$this->input->post('mes').'-'.$this->input->post('ano').']');
+		$this->form_validation->set_rules('email', 'Correo', 'trim|strip_tags|required|valid_email|xss_clean');
+		$this->form_validation->set_rules('licencia','licencia','trim|strip_tags|required|min_length[5]|max_lenght[15]|xss_clean');		
+		$this->form_validation->set_rules('dia_lic','Vig. Licencia','callback_fecha_valida['.$this->input->post('mes_lic').'-'.$this->input->post('ano_lic').']');
 
-		//
-		//callback_limite['.$this->input->post('autor').']'
+
+		//DIRECCIÓN
+
+		$this->form_validation->set_rules('calle','Calle','trim|strip_tags|required|min_length[5]|max_lenght[30]|xss_clean');		
+		$this->form_validation->set_rules('colonia','Colonia','trim|strip_tags|required|min_length[5]|max_lenght[30]|xss_clean');		
+		$this->form_validation->set_rules('delegacion','Delegación','trim|strip_tags|required|min_length[5]|max_lenght[30]|xss_clean');		
+		$this->form_validation->set_rules('ciudad','Ciudad','trim|strip_tags|required|min_length[5]|max_lenght[30]|xss_clean');		
+		$this->form_validation->set_rules('cpostal','C.P.','trim|strip_tags|required|min_length[5]|max_lenght[30]|xss_clean');		
+		$this->form_validation->set_rules('referencia','Referencia.','trim|strip_tags|min_length[5]|max_lenght[30]|xss_clean');		
+
+		//TELÉFONOS DE CONTACTO
+		$this->form_validation->set_rules('oficina', 'Oficina', 'trim|strip_tags|required|callback_valid_phone|min_length[8]|max_lenght[25]|xss_clean');
+		$this->form_validation->set_rules('telefono', 'Teléfono', 'trim|strip_tags|callback_valid_phone|min_length[8]|max_lenght[25]|xss_clean');
+		$this->form_validation->set_rules('celular', 'Celular', 'trim|strip_tags|required|callback_valid_phone|min_length[8]|max_lenght[25]|xss_clean');
+		$this->form_validation->set_rules('telefono2', 'otro', 'trim|strip_tags|callback_valid_phone|min_length[8]|max_lenght[25]|xss_clean');
+
+		//DATOS DEL VEHÍCULO
+
+		$this->form_validation->set_rules('modelo','Modelo','trim|strip_tags|min_length[5]|max_lenght[30]|xss_clean');		
+		//ano_modelo
+		$this->form_validation->set_rules('placa','Placa','trim|strip_tags|min_length[5]|max_lenght[30]|xss_clean');		
+		$this->form_validation->set_rules('serie','Serie','trim|strip_tags|required|min_length[5]|max_lenght[30]|xss_clean');		
 
 
-		$this->form_validation->set_rules('nombre','Nombre','trim|strip_tags|required|min_length[10]|max_lenght[25]|callback_nombre_valido|xss_clean');
+		//INFORMACIÓN ACOMPAÑANTES
+		$this->form_validation->set_rules('nombA1','Nomb. acompañante 1','trim|strip_tags|required|min_length[10]|max_lenght[25]|callback_nombre_completo|xss_clean');
+		$this->form_validation->set_rules('edadA1', 'Edad 1', 'trim|strip_tags|numeric|required|callback_edad_valida|xss_clean');
+
+		$this->form_validation->set_rules('nombA2','Nomb. acompañante 2','trim|strip_tags|min_length[10]|max_lenght[25]|callback_nombre_completo_opcional|xss_clean');		
+		$this->form_validation->set_rules('edadA2', 'Edad 2', 'trim|strip_tags|numeric|callback_edad_valida_opcional|xss_clean');
+
+		$this->form_validation->set_rules('comentario','Observaciones','trim|strip_tags|min_length[5]|max_lenght[200]|xss_clean');		
+
+		//Aviso y privacidad
+		$this->form_validation->set_rules('coleccion_id_aviso', 'aviso', 'callback_accept_terms');		
+
+
 /*
 		// $this->form_validation->set_rules('telefono', 'Teléfono', 'trim|strip_tags|required|callback_valid_phone|min_length[6]|max_lenght[25]|xss_clean');
 		$this->form_validation->set_rules('telefono2', 'Celular', 'trim|strip_tags|required|callback_valid_phone|min_length[6]|max_lenght[25]|xss_clean');
 		
-		$this->form_validation->set_rules('email', 'Correo', 'trim|strip_tags|required|valid_email|xss_clean');
 
 		$this->form_validation->set_rules('id_campus','campus','trim|strip_tags|required|callback_opcion_valida|xss_clean');
 		$this->form_validation->set_rules('id_nivel','nivel','trim|strip_tags|required|callback_opcion_valida|xss_clean');
 		$this->form_validation->set_rules('id_programa','programa','trim|strip_tags|required|callback_opcion_valida|xss_clean');
 
-		$this->form_validation->set_rules('coleccion_id_aviso', 'aviso', 'callback_accept_terms');		
 */
 
 		if ($this->form_validation->run() === TRUE){
@@ -353,13 +390,55 @@ class Inscripciones extends CI_Controller {
 		}
 	}
 
+
+
+	function nombre_valido_opcional( $str ){
+		 $regex = "/^([A-Za-z ñáéíóúÑÁÉÍÓÚ]{2,60})$/i";
+		
+		if ( ( ! preg_match( $regex, $str )  ) && ($str!='') ){
+			$this->form_validation->set_message( 'nombre_valido_opcional','<b class="requerido">*</b> La información introducida en <b>%s</b> no es válida.' );
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+
+
+
 	function nombre_valido( $str ){
+		 $regex = "/^([A-Za-z ñáéíóúÑÁÉÍÓÚ]{2,60})$/i";
+		//if ( ! preg_match( '/^[A-Za-zÁÉÍÓÚáéíóúÑñ \s]/', $str ) ){
+		if ( ! preg_match( $regex, $str ) ){			
+			$this->form_validation->set_message( 'nombre_valido','<b class="requerido">*</b> La información introducida en <b>%s</b> no es válida.' );
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+
+	function nombre_completo_opcional( $str ){
+		if ((! preg_match( '/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]/', $str ) ) && ($str!='') ){
+			$this->form_validation->set_message('nombre_completo_opcional',"<b class='requerido'>*</b> <b>%s</b> no válida osmel.");
+			return FALSE;
+		} else {
+
+			if ((str_word_count($str) < 2 ) &&  (str_word_count($str) > 0 ) ){ 
+				 $this->form_validation->set_message('nombre_completo_opcional',"<b class='requerido'>*</b> A su <b>%s</b>  le falta su apellido.");
+				return FALSE;
+			} else {
+				return TRUE;
+			}	
+		}
+	}
+
+
+	function nombre_completo( $str ){
 		if (! preg_match( '/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]/', $str ) ){
-			$this->form_validation->set_message('nombre_valido',"<b class='requerido'>*</b> <b>%s</b> no válida.");
+			$this->form_validation->set_message('nombre_completo',"<b class='requerido'>*</b> <b>%s</b> no válida.");
 			return FALSE;
 		} else {
 			if (str_word_count($str) < 2 ){ 
-				 $this->form_validation->set_message('nombre_valido',"<b class='requerido'>*</b> A su <b>%s</b>  le falta su apellido.");
+				 $this->form_validation->set_message('nombre_completo',"<b class='requerido'>*</b> A su <b>%s</b>  le falta su apellido.");
 				return FALSE;
 			} else {
 				return TRUE;
@@ -376,6 +455,8 @@ class Inscripciones extends CI_Controller {
 	 	}
 	}
 
+
+
 	function valid_phone( $str ){
         if ( $str ){
             if ( ! preg_match( '/\([0-9]\)| |[0-9]/', $str ) ) {
@@ -386,5 +467,26 @@ class Inscripciones extends CI_Controller {
             }
         }
     }
+
+
+	function edad_valida_opcional( $str ){
+		if ( ( $str >= 12 && $str <= 55 )  ){
+			return TRUE;
+		} else {
+		if 	
+			$this->form_validation->set_message('edad_valida',"<b class='requerido'>*</b> <b>%s</b> no válida.");
+	 		return FALSE;
+		}
+	}    
+
+	function edad_valida( $str ){
+		if ( $str >= 12 && $str <= 55 ){
+			return TRUE;
+		} else {
+			$this->form_validation->set_message('edad_valida',"<b class='requerido'>*</b> <b>%s</b> no válida.");
+	 		return FALSE;
+		}
+	}    
+
 
 }
